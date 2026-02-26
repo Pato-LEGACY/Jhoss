@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Para Jhoanita 🌻</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at bottom, #000018, #000010 70%, #000);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    text-align: center;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* CIELO */
+.cielo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 300px;
+    pointer-events: none;
+}
+
+.luna {
+    position: absolute;
+    top: 30px;
+    right: 10%;
+    width: 90px;
+    height: 90px;
+    background: #fdfae5;
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255, 255, 255, 0.4),
+                0 0 100px rgba(255, 255, 255, 0.2),
+                inset -10px -5px 20px rgba(0,0,0,0.1);
+}
+
+/* MENSAJE */
+#mensaje {
+    position: relative;
+    padding: 40px 15px;
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 700px;
+    margin: auto;
+    text-shadow: 0 0 10px rgba(255, 192, 203, 0.3);
+    z-index: 10;
+}
+
+.nombre {
+    font-size: 28px;
+    font-weight: bold;
+    color: gold;
+    text-shadow: 0 0 20px gold;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+/* IMAGEN GIRASOLES */
+.imagen-girasoles {
+    margin-top: 20px;
+    padding-bottom: 50px;
+}
+
+.imagen-girasoles img {
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+}
+
+/* BOTÓN */
+#musicBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: gold;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px gold;
+    z-index: 100;
+    color: #333;
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/* MÓVIL */
+@media (max-width: 600px) {
+    #mensaje { font-size: 15px; padding-top: 100px; }
+    .luna { width: 60px; height: 60px; right: 5%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="cielo">
+    <div class="luna"></div>
+</div>
+
+<div id="mensaje">
+<br><br>
+Hay personas que llegan sin hacer ruido y transforman los días normales en recuerdos especiales. 
+A veces no somos conscientes de lo mucho que importa tener a alguien con quien simplemente puedas ser tú mismo, 
+y para mí, compartir el tiempo contigo hace que todo se sienta mucho más tranquilo y real.
+<br><br>
+Tu bienestar se volvió algo sumamente importante para mí. Admiro tu esencia, la calma que transmites y esa risa que, sin saberlo, tiene el poder de alegrar cualquier lugar. Eres de esas personas que inspiran a ser mejores, y tenerte en mi vida es algo que valoro más de lo que imaginas.
+<br><br>
+Entre tantas flores que existen, hay una que destaca sin esfuerzo…
+<br>
+🌻🌻 <span class="nombre">Jhoanita</span> 🌻🌻
+<br>
+Quería que hoy tuvieras estos girasoles porque, así como ellos buscan siempre la luz, 
+tu presencia ilumina cualquier momento compartido. Gracias por ser tal como eres, eres increíble.
+</div>
+
+<!-- IMAGEN -->
+<div class="imagen-girasoles">
+    <img src="girasol.jpg" alt="Girasoles">
+</div>
+
+<button id="musicBtn">🎵 Reproducir música</button>
+
+<iframe id="ytplayer" width="0" height="0"
+src="https://www.youtube-nocookie.com/embed/bbB4mAGMvbI?enablejsapi=1&loop=1&playlist=bbB4mAGMvbI"
+frameborder="0" allow="autoplay">
+</iframe>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+/* ESTRELLAS */
+for(let i=0; i<80; i++){
+    const star = document.createElement("div");
+    star.className = "star";
+    const size = Math.random() * 2 + 1 + "px";
+    star.style.width = size;
+    star.style.height = size;
+    star.style.top = Math.random() * 100 + "vh";
+    star.style.left = Math.random() * 100 + "vw";
+    document.body.appendChild(star);
+}
+
+/* MÚSICA */
+let playing=false;
+let iframe=document.getElementById("ytplayer");
+
+document.getElementById("musicBtn").addEventListener("click",function(){
+    if(!playing){
+        iframe.src += "&autoplay=1";
+        this.innerHTML="🔇 Detener música";
+        playing=true;
+    }else{
+        iframe.src=iframe.src.replace("&autoplay=1","");
+        this.innerHTML="🎵 Reproducir música";
+        playing=false;
+    }
+});
+
+/* FUEGOS ARTIFICIALES */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+let particles = [];
+
+function firework(){
+    let x = Math.random() * canvas.width;
+    let y = Math.random() * (canvas.height / 2);
+    for(let i=0; i<25; i++){
+        particles.push({
+            x:x,
+            y:y,
+            angle:Math.random()*2*Math.PI,
+            speed:Math.random()*2+1,
+            life:50
+        });
+    }
+}
+
+function animate(){
+    ctx.fillStyle = "rgba(0,0,20,0.15)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p,index)=>{
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.life--;
+
+        ctx.fillStyle = "hsl("+Math.random()*360+",100%,75%)";
+        ctx.fillRect(p.x, p.y, 2, 2);
+
+        if(p.life <= 0) particles.splice(index, 1);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+setInterval(firework, 4000);
+animate();
+
+</script>
+
+</body>
+</html>
